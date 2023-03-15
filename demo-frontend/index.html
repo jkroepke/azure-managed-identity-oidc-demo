@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Demo OIDC Frontend</title>
+    <!-- Latest compiled and minified CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/keycloak-js@21.0.1/dist/keycloak.min.js"></script>
+    <script src="script.js"></script>
+</head>
+<body onload="initKeycloak()" style="margin-top: 100px">
+<div class="container">
+    <div class="row" id="unauthenticated">
+        <div class="col"></div>
+        <div class="col">
+            <center>
+                <button type="button" class="btn btn-primary" id="keycloak-login">Login with Keycloak</button>
+            </center>
+        </div>
+        <div class="col"></div>
+    </div>
+    <div class="row" id="authenticated" style="display: none">
+        <div class="col"></div>
+        <div class="col">
+            <center>
+                <button type="button" class="btn btn-primary" id="azure-login">Login on Azure</button><p><br><h3>OIDC Token</h3><code id="jwt"></code></p></div>
+            </center>
+        <div class="col"></div>
+    </div>
+</div>
+
+</body>
+</html>

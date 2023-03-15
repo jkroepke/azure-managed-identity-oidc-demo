@@ -1,0 +1,102 @@
+enabled: true
+realm: demo
+groups:
+  - name: demo-group1
+  - name: demo-group2
+clients:
+  - enabled: true
+    name: demo-frontend
+    clientId: demo-frontend
+    redirectUris: ["*"]
+    webOrigins: ["*"]
+    bearerOnly: false
+    publicClient: true
+    notBefore: 0
+    consentRequired: false
+    standardFlowEnabled: true
+    implicitFlowEnabled: true
+    directAccessGrantsEnabled: true
+    serviceAccountsEnabled: false
+    frontchannelLogout: false
+    protocol: openid-connect
+    defaultClientScopes:
+      - "web-origins"
+      - "acr"
+      - "roles"
+      - "profile"
+      - "email"
+      - "oidc-demo"
+users:
+  - username: demo1
+    email: demo1@example.com
+    emailVerified: true
+    enabled: true
+    firstName: Demo
+    lastName: User 1
+    credentials:
+      - type: password
+        userLabel: initial
+        value: demouser1
+    attributes:
+      AZURE_TENANT_ID: $(env:AZURE_TENANT_ID)
+      AZURE_CLIENT_ID: $(env:AZURE_CLIENT_ID_DEMO1)
+    groups:
+      - demo-group1
+  - username: demo2
+    email: demo2@example.com
+    emailVerified: true
+    enabled: true
+    firstName: Demo
+    lastName: User 2
+    credentials:
+      - type: password
+        userLabel: initial
+        value: demouser2
+    attributes:
+      AZURE_TENANT_ID: $(env:AZURE_TENANT_ID)
+      AZURE_CLIENT_ID: $(env:AZURE_CLIENT_ID_DEMO2)
+    groups:
+      - demo-group2
+clientScopes:
+  - name: oidc-demo
+    protocol: openid-connect
+    attributes:
+      include.in.token.scope: "true"
+      display.on.consent.screen: "false"
+    protocolMappers:
+      - name: AZURE_TENANT_ID
+        protocol: openid-connect
+        protocolMapper: oidc-usermodel-attribute-mapper
+        consentRequired: false
+        config:
+          aggregate.attrs: "false"
+          userinfo.token.claim: "true"
+          multivalued: "false"
+          user.attribute: "AZURE_TENANT_ID"
+          id.token.claim: "true"
+          access.token.claim: "true"
+          claim.name: "AZURE_TENANT_ID"
+      - name: AZURE_CLIENT_ID
+        protocol: openid-connect
+        protocolMapper: oidc-usermodel-attribute-mapper
+        consentRequired: false
+        config:
+          aggregate.attrs: "false"
+          userinfo.token.claim: "true"
+          multivalued: "false"
+          user.attribute: "AZURE_CLIENT_ID"
+          id.token.claim: "true"
+          access.token.claim: "true"
+          claim.name: "AZURE_CLIENT_ID"
+
+      - name: UsernameInSubject
+        protocol: openid-connect
+        protocolMapper: oidc-usermodel-property-mapper
+        consentRequired: false
+        config:
+          userinfo.token.claim: true
+          user.attribute: username
+          id.token.claim: true
+          access.token.claim: true
+          claim.name: sub
+          jsonType.label: String
