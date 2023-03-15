@@ -27,8 +27,8 @@ clients:
       - "email"
       - "oidc-demo"
 users:
-  - username: demo1
-    email: demo1@example.com
+  - username: demouser1
+    email: demouser1@example.com
     emailVerified: true
     enabled: true
     firstName: Demo
@@ -42,8 +42,8 @@ users:
       AZURE_CLIENT_ID: $(env:AZURE_CLIENT_ID_DEMO1)
     groups:
       - demo-group1
-  - username: demo2
-    email: demo2@example.com
+  - username: demouser1
+    email: demouser1@example.com
     emailVerified: true
     enabled: true
     firstName: Demo
