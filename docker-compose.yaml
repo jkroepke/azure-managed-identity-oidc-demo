@@ -1,9 +1,8 @@
-version: "3.7"
+version: "3.9"
 services:
   traefik:
     image: "traefik:v2.9"
     container_name: "traefik"
-    network_mode: host
     restart: unless-stopped
     command:
       #- "--log.level=DEBUG"
@@ -21,6 +20,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
+      - "letsencrypt:/letsencrypt/"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
   keycloak:
     image: quay.io/keycloak/keycloak:21.0.1
@@ -40,13 +40,13 @@ services:
       - "https://${KEYCLOAK_HOSTNAME}"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.demo-frontend.rule=Host(`$KEYCLOAK_HOSTNAME`)"
-      - "traefik.http.routers.demo-frontend.entrypoints=websecure"
-      - "traefik.http.routers.demo-frontend.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.demo-frontend.middlewares=demo-frontend-redirect-to-https"
-      - "traefik.http.middlewares.demo-frontend-redirect-to-https.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.demo-frontend-redirect-to-https.redirectscheme.permanent=true"
-      - "traefik.http.services.demo-frontend.loadbalancer.server.port=8080"
+      - "traefik.http.routers.keycloak.rule=Host(`$KEYCLOAK_HOSTNAME`)"
+      - "traefik.http.routers.keycloak.entrypoints=websecure"
+      - "traefik.http.routers.keycloak.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.keycloak.middlewares=demo-frontend-redirect-to-https"
+      - "traefik.http.middlewares.keycloak-redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.keycloak-redirect-to-https.redirectscheme.permanent=true"
+      - "traefik.http.services.keycloak.loadbalancer.server.port=8080"
   keycloak-config-cli:
     image: quay.io/adorsys/keycloak-config-cli:5.6.1-21.0.1
     env_file:
@@ -75,3 +75,5 @@ services:
       - "traefik.http.middlewares.demo-frontend-redirect-to-https.redirectscheme.scheme=https"
       - "traefik.http.middlewares.demo-frontend-redirect-to-https.redirectscheme.permanent=true"
       - "traefik.http.services.demo-frontend.loadbalancer.server.port=8080"
+volumes:
+  letsencrypt:
