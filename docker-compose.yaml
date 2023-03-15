@@ -1,5 +1,27 @@
 version: "3.7"
 services:
+  traefik:
+    image: "traefik:v2.9"
+    container_name: "traefik"
+    network_mode: host
+    restart: unless-stopped
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+      #- "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.letsencrypt.acme.email=acme@jkroepke.de"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
   keycloak:
     image: quay.io/keycloak/keycloak:21.0.1
     environment:
@@ -14,6 +36,17 @@ services:
       - "edge"
       - "--hostname-strict"
       - "false"
+      - "--hostname-url"
+      - "https://${KEYCLOAK_HOSTNAME}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.demo-frontend.rule=Host(`$KEYCLOAK_HOSTNAME`)"
+      - "traefik.http.routers.demo-frontend.entrypoints=websecure"
+      - "traefik.http.routers.demo-frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.demo-frontend.middlewares=demo-frontend-redirect-to-https"
+      - "traefik.http.middlewares.demo-frontend-redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.demo-frontend-redirect-to-https.redirectscheme.permanent=true"
+      - "traefik.http.services.demo-frontend.loadbalancer.server.port=8080"
   keycloak-config-cli:
     image: quay.io/adorsys/keycloak-config-cli:5.6.1-21.0.1
     env_file:
@@ -23,7 +56,7 @@ services:
       KEYCLOAK_AVAILABILITYCHECK_TIMEOUT: 120s
       KEYCLOAK_URL: "http://keycloak:8080/"
       KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: "${KEYCLOAK_ADMIN_PASSWORD}"
+      KEYCLOAK_PASSWORD: "$KEYCLOAK_ADMIN_PASSWORD"
       IMPORT_FILES: "/config/*"
       IMPORT_VARSUBSTITUTION_ENABLED: "true"
     volumes:
@@ -32,7 +65,13 @@ services:
     build:
       context: ./demo-frontend/
       args:
-        KEYCLOAK_URL: "$KEYCLOAK_URL"
-    ports:
-      - "3000:8080"
-
+        KEYCLOAK_HOSTNAME: "$KEYCLOAK_HOSTNAME"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.demo-frontend.rule=Host(`$FRONTEND_HOSTNAME`)"
+      - "traefik.http.routers.demo-frontend.entrypoints=websecure"
+      - "traefik.http.routers.demo-frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.demo-frontend.middlewares=demo-frontend-redirect-to-https"
+      - "traefik.http.middlewares.demo-frontend-redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.demo-frontend-redirect-to-https.redirectscheme.permanent=true"
+      - "traefik.http.services.demo-frontend.loadbalancer.server.port=8080"
