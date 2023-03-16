@@ -42,7 +42,8 @@ Open `.env` file and use the values from step 1.3.
 
 ```ini
 KEYCLOAK_ADMIN_PASSWORD= #define a password of your choice
-KEYCLOAK_URL=https://keycloak.example.com # Public Routable Hostname of your Keycloak Instance
+KEYCLOAK_HOSTNAME=keycloak.localhost # Public routable hostname of Keycloak Instance
+FRONTEND_HOSTNAME=keycloak.localhost # Public routable hostname of web Instance
 AZURE_TENANT_ID=9c1de352-64a4-4509-b3fc-4ef2df8db9b8 # TenantId from step 1.2 (should be equal)
 AZURE_CLIENT_ID_DEMO1=7806b049-b18e-422c-9dfd-750636ab16c6 # ClientId of demouser1 from step 1.2
 AZURE_CLIENT_ID_DEMO2=c8635071-e956-415f-bbfb-58b7bdad013d # ClientId of demouser2 from step 1.2
@@ -60,9 +61,12 @@ The Keycloak and Demo Frontend will spin up. By default, the Keycloak listen on 
 The Keycloak port needs to be publicly exposed by a load balancer of your choice. The endpoints need to be https and should 
 redirect to port 8080.
 
+The demo will also spin up a [traefik](https://traefik.io/) container. By default, traefik does the load balancer
+and issues lets encrypt certificates automatically.
+
 ## Step 3 - Configure Federated Credentials
 
 ```bash
-az identity federated-credential create --name demouser1 --identity-name demouser1 --resource-group oidc-demo --issuer https://keycloak.20.219.58.87.sslip.io/ --subject demouser1 --audiences account -o table
-az identity federated-credential create --name demouser2 --identity-name demouser2 --resource-group oidc-demo --issuer https://keycloak.20.219.58.87.sslip.io/ --subject demouser2 --audiences account -o table
+az identity federated-credential create --name demouser1 --identity-name demouser1 --resource-group oidc-demo --issuer https://$KEYCLOAK_URL/realms/demo --subject demouser1 --audiences account -o table
+az identity federated-credential create --name demouser2 --identity-name demouser2 --resource-group oidc-demo --issuer https://$KEYCLOAK_URL/realms/demo --subject demouser2 --audiences account -o table
 ```

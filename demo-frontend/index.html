@@ -26,11 +26,10 @@
         keycloak.onAuthSuccess = function() {
             document.getElementById('unauthenticated').style = 'display: none';
             document.getElementById('authenticated').style = '';
-            window.AZURE_TENANT_ID = keycloak.tokenParsed.AZURE_TENANT_ID
-            window.AZURE_CLIENT_ID = keycloak.tokenParsed.AZURE_CLIENT_ID
 
             keycloak.loadUserProfile().then(function(profile) {
                 document.getElementById('jwt').innerText = keycloak.token
+                document.getElementById('az-login').innerText = `az login --service-principal -u ${keycloak.tokenParsed.AZURE_CLIENT_ID} -t ${keycloak.tokenParsed.AZURE_TENANT_ID} --federated-token ${keycloak.token}`
             }).catch(function(e) {
                 console.log(e);
             });
@@ -54,7 +53,8 @@
         <div class="col"></div>
         <div class="col">
             <center>
-                <button type="button" class="btn btn-primary" id="azure-login">Login on Azure</button><p><br><h3>OIDC Token</h3><code id="jwt"></code></p></div>
+                <p><br><h3>az login</h3><code id="az-login"></code></p></div>
+                <p><br><h3>OIDC Token</h3><code id="jwt"></code></p></div>
             </center>
         <div class="col"></div>
     </div>
