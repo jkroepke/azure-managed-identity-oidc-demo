@@ -5,7 +5,7 @@ Reference: https://learn.microsoft.com/en-us/azure/active-directory/develop/work
 
 ## Overview
 
-![](https://learn.microsoft.com/en-us/azure/active-directory/develop/media/workload-identity-federation/workflow.svg)
+![](https://techcommunity.microsoft.com/t5/image/serverpage/image-id/389125i40DB927E77936A67/image-size/large?v=v2&px=999)
 
 # Requirements
 
