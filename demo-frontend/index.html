@@ -11,10 +11,13 @@
             display: inline-flex;
             height: 16px;
             margin-left: 0.2rem;
+            font-size: x-small;
+            vertical-align: text-top;
         }
 
         .copy:hover {
             cursor: pointer;
+            color: lightblue;
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/keycloak-js@21.0.1/dist/keycloak.min.js"></script>
@@ -65,8 +68,8 @@
         <div class="col"></div>
         <div class="col">
             <center>
-                <p><br><h3>az login</h3><i class="copy" onclick="navigator.clipboard.writeText(document.getElementById('az-login').innerText);">[copy]</i><code id="az-login"></code></p>
-                <p><br><h3>OIDC Token</h3><i class="copy" onclick="navigator.clipboard.writeText(document.getElementById('jwt').innerText);">[copy]</i><code id="jwt"></code></p>
+                <p><br><h3>az login <i class="copy" onclick="navigator.clipboard.writeText(document.getElementById('az-login').innerText);">[copy]</i></h3><code id="az-login"></code></p>
+                <p><br><h3>OIDC Token <i class="copy" onclick="navigator.clipboard.writeText(document.getElementById('jwt').innerText);">[copy]</i></h3><code id="jwt"></code></p>
             </center>
         </div>
         <div class="col"></div>
