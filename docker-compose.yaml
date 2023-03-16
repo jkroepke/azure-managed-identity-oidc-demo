@@ -66,6 +66,8 @@ services:
       context: ./demo-frontend/
       args:
         KEYCLOAK_HOSTNAME: "$KEYCLOAK_HOSTNAME"
+    ports:
+      - "3000:8080"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.demo-frontend.rule=Host(`$FRONTEND_HOSTNAME`)"

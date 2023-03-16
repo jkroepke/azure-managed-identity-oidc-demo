@@ -5,6 +5,18 @@
     <title>Demo OIDC Frontend</title>
     <!-- Latest compiled and minified CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <style>
+        .copy {
+            width: 16px;
+            display: inline-flex;
+            height: 16px;
+            margin-left: 0.2rem;
+        }
+
+        .copy:hover {
+            cursor: pointer;
+        }
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/keycloak-js@21.0.1/dist/keycloak.min.js"></script>
     <script>
     window.initKeycloak = () => {
@@ -53,9 +65,10 @@
         <div class="col"></div>
         <div class="col">
             <center>
-                <p><br><h3>az login</h3><code id="az-login"></code></p></div>
-                <p><br><h3>OIDC Token</h3><code id="jwt"></code></p></div>
+                <p><br><h3>az login</h3><i class="copy" onclick="navigator.clipboard.writeText(document.getElementById('az-login').innerText);">[copy]</i><code id="az-login"></code></p>
+                <p><br><h3>OIDC Token</h3><i class="copy" onclick="navigator.clipboard.writeText(document.getElementById('jwt').innerText);">[copy]</i><code id="jwt"></code></p>
             </center>
+        </div>
         <div class="col"></div>
     </div>
 </div>

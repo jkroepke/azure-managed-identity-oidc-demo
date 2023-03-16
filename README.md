@@ -34,11 +34,20 @@ az identity create -n demouser2 -g oidc-demo -o table
 
 The output contains the `ClientId` and `TenantId`. Save the values.
 
+## Step 1.3 - Configure Federated Credentials
+
+Set up the federated Credentials with az cli. Replace `$KEYCLOAK_URL` with the routable keycloak hostname.
+
+```bash
+az identity federated-credential create -n demouser1 --identity-name demouser1 -g oidc-demo --issuer https://$KEYCLOAK_URL/realms/demo --subject demouser1 --audiences account -o table
+az identity federated-credential create -n demouser2 --identity-name demouser2 -g oidc-demo --issuer https://$KEYCLOAK_URL/realms/demo --subject demouser2 --audiences account -o table
+```
+
 ## Step 2 - Setup Keycloak
 
 ## Step 2.1 - Prepare .env file
 
-Open `.env` file and use the values from step 1.3.
+Open `.env` file and use the values from step 1.2.
 
 ```ini
 KEYCLOAK_ADMIN_PASSWORD= #define a password of your choice
@@ -54,7 +63,7 @@ AZURE_CLIENT_ID_DEMO2=c8635071-e956-415f-bbfb-58b7bdad013d # ClientId of demouse
 Ensure, that you pass a `KEYCLOAK_ADMIN_PASSWORD` and a `KEYCLOAK_URL` before running
 
 ```bash
-docker compose up
+docker compose up -d
 ```
 
 The Keycloak and Demo Frontend will spin up. By default, the Keycloak listen on port `8080` and the frontend on port `3000`.
@@ -64,9 +73,20 @@ redirect to port 8080.
 The demo will also spin up a [traefik](https://traefik.io/) container. By default, traefik does the load balancer
 and issues lets encrypt certificates automatically.
 
-## Step 3 - Configure Federated Credentials
+The Keycloak will be automatically configured for the demo. There is no need to login into the Keycloak instance.
 
-```bash
-az identity federated-credential create --name demouser1 --identity-name demouser1 --resource-group oidc-demo --issuer https://$KEYCLOAK_URL/realms/demo --subject demouser1 --audiences account -o table
-az identity federated-credential create --name demouser2 --identity-name demouser2 --resource-group oidc-demo --issuer https://$KEYCLOAK_URL/realms/demo --subject demouser2 --audiences account -o table
-```
+## Step 3 - Open Browser
+
+Open your Browser and navigate to your defined frontend url. Click on `Login with Keycloak`.
+
+As login, use
+
+* demouser1 / demouser1
+* demouser2 / demouser2
+
+After login, you will be redirected back. The page now provides you an azure cli login command and the pure OIDC token.
+
+## Step 4 - See Azure CLI login
+
+Copy the Azure CLI Login from the page.
+
