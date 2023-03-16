@@ -59,3 +59,10 @@ docker compose up
 The Keycloak and Demo Frontend will spin up. By default, the Keycloak listen on port `8080` and the frontend on port `3000`.
 The Keycloak port needs to be publicly exposed by a load balancer of your choice. The endpoints need to be https and should 
 redirect to port 8080.
+
+## Step 3 - Configure Federated Credentials
+
+```bash
+az identity federated-credential create --name demouser1 --identity-name demouser1 --resource-group oidc-demo --issuer https://keycloak.20.219.58.87.sslip.io/ --subject demouser1 --audiences account -o table
+az identity federated-credential create --name demouser2 --identity-name demouser2 --resource-group oidc-demo --issuer https://keycloak.20.219.58.87.sslip.io/ --subject demouser2 --audiences account -o table
+```
