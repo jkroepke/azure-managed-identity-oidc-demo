@@ -42,8 +42,8 @@ users:
       AZURE_CLIENT_ID: $(env:AZURE_CLIENT_ID_DEMO1)
     groups:
       - demo-group1
-  - username: demouser1
-    email: demouser1@example.com
+  - username: demouser2
+    email: demouser2@example.com
     emailVerified: true
     enabled: true
     firstName: Demo
